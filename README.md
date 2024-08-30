@@ -6,6 +6,24 @@
 [![codecov.io](https://codecov.io/github/mrc-ide/reside.utils/coverage.svg?branch=main)](https://codecov.io/github/mrc-ide/reside.utils?branch=main)
 <!-- badges: end -->
 
+## Usage
+
+```r
+usethis::use_standalone("reside-ic/reside.utils", "standalone-utils-assert.R")
+```
+
+To exclude this file from coverage counts, make a `.covrignore` file containing:
+
+```
+R/import-*.R
+```
+
+To exclude these files from GitHub diffs by default
+
+```
+R/import-*.R linguist-generated=true
+```
+
 ## Installation
 
 To install `reside.utils`:
