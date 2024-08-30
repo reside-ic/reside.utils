@@ -1,8 +1,8 @@
-## ---
-## repo: reside/reside.utils
-## file: standalone-utils-assert.R
-## imports: cli
-## ---
+# ---
+# repo: reside/reside.utils
+# file: standalone-utils-assert.R
+# imports: cli
+# ---
 assert_scalar <- function(x, name = deparse(substitute(x)), arg = name,
                           call = parent.frame())  {
   if (length(x) != 1) {
