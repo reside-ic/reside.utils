@@ -15,5 +15,8 @@ RoxygenNote: 7.1.1
 URL: https://reside-ic.github.io/reside.utils, https://github.com/reside-ic/reside.utils
 BugReports: https://github.com/reside-ic/reside.utils/issues
 Suggests:
-    testthat (>= 3.0.0)
+    pkgload,
+    usethis,
+    testthat (>= 3.0.0),
+    withr
 Config/testthat/edition: 3
