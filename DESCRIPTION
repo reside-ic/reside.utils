@@ -1,0 +1,19 @@
+Package: reside.utils
+Title: Common Utilities
+Version: 0.1.0
+Authors@R: c(person("Rich", "FitzJohn", role = c("aut", "cre"),
+                    email = "rich.fitzjohn@gmail.com"),
+             person("Imperial College of Science, Technology and Medicine",
+                    role = "cph"))
+Description: Some common utilities that we commonly use in other
+    packages.  We don't expect this package to be directly used, but
+    instead used with usethis' "standalone" functionality.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+URL: https://reside-ic.github.io/reside.utils, https://github.com/reside-ic/reside.utils
+BugReports: https://github.com/reside-ic/reside.utils/issues
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
