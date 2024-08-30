@@ -151,6 +151,35 @@ assert_list <- function(x, name = deparse(substitute(x)), arg = name,
 }
 
 
+assert_scalar_positive_numeric <- function(x, allow_zero = TRUE,
+                                           name = deparse(substitute(x)),
+                                           arg = name, call = parent.frame()) {
+  assert_scalar_numeric(x, name = name, call = call)
+  if (allow_zero) {
+    if (x < 0) {
+      cli::cli_abort("'{name}' must be at least 0", arg = arg, call = call)
+    }
+  } else {
+    if (x <= 0) {
+      cli::cli_abort("'{name}' must be greater than 0", arg = arg, call = call)
+    }
+  }
+  invisible(x)
+}
+
+
+assert_raw <- function(x, len = NULL, name = deparse(substitute(x)),
+                       arg = name, call = parent.frame()) {
+  if (!is.raw(x)) {
+    cli::cli_abort("'{name}' must be a raw vector", arg = arg, call = call)
+  }
+  if (!is.null(len)) {
+    assert_length(x, len, name = name, call = call)
+  }
+  invisible(x)
+}
+
+
 assert_named <- function(x, unique = FALSE, name = deparse(substitute(x)),
                          arg = name, call = parent.frame()) {
   nms <- names(x)

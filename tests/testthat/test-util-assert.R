@@ -111,3 +111,31 @@ test_that("assert_list", {
   x <- c(a = 1)
   expect_error(assert_list(x), "Expected 'x' to be a list")
 })
+
+
+test_that("assert_raw", {
+  x <- raw(10)
+  expect_silent(assert_raw(x))
+  expect_silent(assert_raw(x, 10))
+  expect_error(assert_raw(x, 5),
+               "Expected 'x' to have length 5, but was length 10")
+  x <- NULL
+  expect_error(assert_raw(x, 5),
+               "'x' must be a raw vector")
+})
+
+
+test_that("assert_scalar_positive numeric", {
+  x <- 1
+  expect_silent(assert_scalar_positive_numeric(x))
+  expect_silent(assert_scalar_positive_numeric(x, allow_zero = FALSE))
+  x <- 0
+  expect_silent(assert_scalar_positive_numeric(x))
+  expect_error(assert_scalar_positive_numeric(x, allow_zero = FALSE),
+               "'x' must be greater than 0")
+  x <- -2
+  expect_error(assert_scalar_positive_numeric(x),
+               "'x' must be at least 0")
+  expect_error(assert_scalar_positive_numeric(x, allow_zero = FALSE),
+               "'x' must be greater than 0")
+})
