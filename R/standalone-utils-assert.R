@@ -43,7 +43,7 @@ assert_integer <- function(x, name = deparse(substitute(x)),
     }
     if (!isTRUE(all.equal(x, rx, tolerance = tolerance))) {
       cli::cli_abort(
-        c("Exected '{name}' to be integer",
+        c("Expected '{name}' to be integer",
           i = paste("{cli::qty(length(x))}The provided",
                     "{?value was/values were} numeric, but not very close",
                     "to integer values")),
@@ -51,7 +51,7 @@ assert_integer <- function(x, name = deparse(substitute(x)),
     }
     x <- as.integer(rx)
   } else {
-    cli::cli_abort("Exected '{name}' to be integer", call = call, arg = arg)
+    cli::cli_abort("Expected '{name}' to be integer", call = call, arg = arg)
   }
   invisible(x)
 }
