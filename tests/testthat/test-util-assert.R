@@ -103,3 +103,11 @@ test_that("assert_scalar_logical", {
   expect_no_error(assert_scalar_logical(TRUE))
   expect_error(assert_scalar_logical(1), "to be logical")
 })
+
+
+test_that("assert_list", {
+  expect_silent(assert_list(list()))
+  expect_silent(assert_list(list(a = 1)))
+  x <- c(a = 1)
+  expect_error(assert_list(x), "Expected 'x' to be a list")
+})
