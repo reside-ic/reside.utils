@@ -9,7 +9,7 @@
 ## Usage
 
 ```r
-usethis::use_standalone("reside-ic/reside.utils", "standalone-utils-assert.R")
+usethis::use_standalone("reside-ic/reside.utils", "utils-assert")
 ```
 
 To exclude this file from coverage counts, make a `.covrignore` file containing:
