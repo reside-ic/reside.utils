@@ -11,8 +11,7 @@ test_that("can use utils in standalone", {
   evaluate_promise(
     usethis::with_project(
       path,
-      usethis::use_standalone("reside-ic/reside.utils", "utils-assert",
-                              ref = "prototype"))) # TODO: drop on merge
+      usethis::use_standalone("reside-ic/reside.utils", "utils-assert")))
 
   expect_true(
     file.exists(file.path(path, "R/import-standalone-utils-assert.R")))
