@@ -168,6 +168,19 @@ assert_scalar_positive_numeric <- function(x, allow_zero = TRUE,
 }
 
 
+assert_scalar_positive_integer <- function(x, allow_zero = FALSE,
+                                           name = deparse(substitute(x)),
+                                           tolerance = NULL, arg = name,
+                                           call = parent.frame()) {
+  assert_scalar_integer(x, name, tolerance = tolerance, arg = arg, call = call)
+  min <- if (allow_zero) 0 else 1
+  if (x < min) {
+    cli::cli_abort("'{name}' must be at least {min}", arg = arg, call = call)
+  }
+  invisible(x)
+}
+
+
 assert_raw <- function(x, len = NULL, name = deparse(substitute(x)),
                        arg = name, call = parent.frame()) {
   if (!is.raw(x)) {
