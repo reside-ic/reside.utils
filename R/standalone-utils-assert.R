@@ -168,7 +168,7 @@ assert_scalar_positive_numeric <- function(x, allow_zero = TRUE,
 }
 
 
-assert_scalar_positive_integer <- function(x, allow_zero = FALSE,
+assert_scalar_positive_integer <- function(x, allow_zero = TRUE,
                                            name = deparse(substitute(x)),
                                            tolerance = NULL, arg = name,
                                            call = parent.frame()) {

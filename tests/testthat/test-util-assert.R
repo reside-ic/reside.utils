@@ -139,3 +139,21 @@ test_that("assert_scalar_positive numeric", {
   expect_error(assert_scalar_positive_numeric(x, allow_zero = FALSE),
                "'x' must be greater than 0")
 })
+
+
+test_that("assert_scalar_positive integer", {
+  x <- 1
+  expect_silent(assert_scalar_positive_integer(x))
+  expect_silent(assert_scalar_positive_integer(x, allow_zero = FALSE))
+  x <- 0
+  expect_silent(assert_scalar_positive_integer(x))
+  expect_error(assert_scalar_positive_integer(x, allow_zero = FALSE),
+               "'x' must be at least 1")
+  x <- -2
+  expect_error(assert_scalar_positive_integer(x),
+               "'x' must be at least 0")
+  expect_error(assert_scalar_positive_integer(x, allow_zero = FALSE),
+               "'x' must be at least 1")
+  x <- 1.1
+  expect_error(assert_scalar_positive_integer(x), "Expected 'x' to be integer")
+})
