@@ -67,7 +67,7 @@ assert_logical <- function(x, name = deparse(substitute(x)),
 
 
 assert_nonmissing <- function(x, name = deparse(substitute(x)),
-                          arg = name, call = parent.frame()) {
+                              arg = name, call = parent.frame()) {
   if (anyNA(x)) {
     cli::cli_abort("Expected '{name}' to be non-NA", arg = arg, call = call)
   }
@@ -235,7 +235,7 @@ assert_named <- function(x, unique = FALSE, name = deparse(substitute(x)),
 
 match_value <- function(x, choices, name = deparse(substitute(x)), arg = name,
                         call = parent.frame()) {
-  assert_scalar_character(x, call = call, arg = arg)
+  assert_scalar_character(x, call = call, name = name, arg = arg)
   if (!(x %in% choices)) {
     choices_str <- paste(sprintf("'%s'", choices), collapse = ", ")
     cli::cli_abort(c("'{name}' must be one of {choices_str}",
