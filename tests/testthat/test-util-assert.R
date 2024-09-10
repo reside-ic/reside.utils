@@ -157,3 +157,21 @@ test_that("assert_scalar_positive integer", {
   x <- 1.1
   expect_error(assert_scalar_positive_integer(x), "Expected 'x' to be integer")
 })
+
+
+test_that("assert_scalar_x supports null on request", {
+  expect_error(assert_scalar_character(NULL), "has length 0")
+  expect_no_error(assert_scalar_character(NULL, allow_null = TRUE))
+
+  expect_error(assert_scalar_integer(NULL), "has length 0")
+  expect_no_error(assert_scalar_integer(NULL, allow_null = TRUE))
+
+  expect_error(assert_scalar_numeric(NULL), "has length 0")
+  expect_no_error(assert_scalar_numeric(NULL, allow_null = TRUE))
+
+  expect_error(assert_scalar_logical(NULL), "has length 0")
+  expect_no_error(assert_scalar_logical(NULL, allow_null = TRUE))
+
+  expect_error(assert_scalar_size(NULL), "has length 0")
+  expect_no_error(assert_scalar_size(NULL, allow_null = TRUE))
+})

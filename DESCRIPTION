@@ -15,8 +15,10 @@ RoxygenNote: 7.1.1
 URL: https://reside-ic.github.io/reside.utils, https://github.com/reside-ic/reside.utils
 BugReports: https://github.com/reside-ic/reside.utils/issues
 Imports:
-    cli
+    cli,
+    fs
 Suggests:
+    mockery,
     pkgload,
     rmarkdown,
     usethis,
