@@ -9,15 +9,19 @@
 ##'   e.g., `E[0-9]{4}`.  This should not include beginning or end of
 ##'   string markers.
 ##'
+##' @param cmd_explain The name of the command to explain an error
+##'
 ##' @param check Logical, indicating if we should check that we can
 ##'   render everything we produce
 ##'
 ##' @return A list, save this within the package
 ##'
 ##' @export
-errors_parse <- function(path_rmd, pattern, check = TRUE) {
+errors_parse <- function(path_rmd, pattern, cmd_explain, check = TRUE) {
+  assert_scalar_character(cmd_explain)
   dat <- errors_read(path_rmd, pattern)
-  errors <- Map(error_parse, names(dat), dat)
+  info <- list(cmd_explain = cmd_explain)
+  errors <- Map(error_parse, names(dat), dat, info)
   if (check) {
     cli::cli_alert_info("Checking errors render")
     for (err in errors) {
@@ -70,61 +74,66 @@ errors_read <- function(path_rmd, pattern) {
 }
 
 
-error_parse <- function(name, txt) {
-  xml <- xml2::read_xml(commonmark::markdown_xml(txt))
+error_parse <- function(name, txt, info) {
   list(code = name,
        plain = txt,
-       parsed = lapply(xml2::xml_children(xml), error_parse_node))
+       parsed = error_parse_md(txt, info))
 }
 
 
-error_parse_node <- function(x) {
+error_parse_md <- function(txt, info) {
+  xml <- xml2::read_xml(commonmark::markdown_xml(txt))
+  lapply(xml2::xml_children(xml), error_parse_node, info)
+}
+
+
+error_parse_node <- function(x, info) {
   nm <- xml2::xml_name(x)
   switch(nm,
-         paragraph = error_parse_paragraph(x),
-         code_block = error_parse_code_block(x),
-         list = error_parse_list(x),
+         paragraph = error_parse_paragraph(x, info),
+         code_block = error_parse_code_block(x, info),
+         list = error_parse_list(x, info),
          ## Hard, inline:
-         link = error_parse_link(x),
+         link = error_parse_link(x, info),
          ## Easy, inline:
          code = sprintf("{.code %s}", xml2::xml_text(x)),
          emph = sprintf("{.emph %s}", xml2::xml_text(x)),
+         strong = sprintf("{.strong %s}", xml2::xml_text(x)),
          text = xml2::xml_text(x),
-         stop(sprintf("Unknown node '%s'", nm)))
+         cli::cli_abort("Unknown node in md: '{nm}'"))
 }
 
 
-error_parse_list <- function(x) {
+error_parse_list <- function(x, info) {
   items <- xml2::xml_children(x)
   stopifnot(all(vapply(items, xml2::xml_name, "") == "item"))
-  items <- lapply(items, function(x) error_parse_node(xml2::xml_child(x)))
+  items <- lapply(items, function(x) error_parse_node(xml2::xml_child(x), info))
   list(type = "list",
        mode = xml2::xml_attr(x, "type"),
        items = items)
 }
 
 
-error_parse_paragraph <- function(x) {
-  txt <- vapply(xml2::xml_children(x), error_parse_node, "")
+error_parse_paragraph <- function(x, info) {
+  txt <- vapply(xml2::xml_children(x), error_parse_node, "", info)
   list(type = "paragraph",
        text = paste(txt, collapse = ""))
 }
 
 
-error_parse_code_block <- function(x) {
+error_parse_code_block <- function(x, info) {
   list(type = "code_block",
        text = strsplit(sub("\n$", "", xml2::xml_text(x)), "\n")[[1]])
 }
 
 
-error_parse_link <- function(x) {
+error_parse_link <- function(x, info) {
   target <- xml2::xml_attr(x, "destination")
-  if (grepl("^#e[0-9]{4}$", target)) {
+  if (grepl("^#(.+)$", target)) {
     code <- xml2::xml_text(x)
-    stopifnot(tolower(code) == sub("^#", "", target))
-    sprintf('{.run odin2::odin_error_explain("%s")}', code)
+    sprintf('{.run %s("%s")}', info$cmd_explain, code)
   } else {
-    txt <- paste(vapply(xml2::xml_children(x), error_parse_node, ""),
+    txt <- paste(vapply(xml2::xml_children(x), error_parse_node, "", info),
                  collapse = "")
     sprintf("{.href [%s](%s)}", target, txt)
   }
@@ -134,10 +143,10 @@ error_parse_link <- function(x) {
 trim_blank <- function(x) {
   i <- 1L
   j <- length(x)
-  while (x[[i]] == "" && i > j) {
+  while (x[[i]] == "" && i < j) {
     i <- i + 1L
   }
-  while (x[[j]] == "" && j < i) {
+  while (x[[j]] == "" && j > i) {
     j <- j - 1L
   }
   x[i:j]
