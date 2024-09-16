@@ -9,7 +9,7 @@ error_explain <- function(errors, code, how, call = parent.frame()) {
   how <- match_value(how, c("pretty", "plain", "link"),
                      name = "how", call = call)
 
-  if (grepl(errors$pattern$complete, code)) {
+  if (!grepl(errors$pattern$complete, code)) {
     cli::cli_abort(
       "Invalid code '{code}', should match '{errors$pattern$hint}'",
       arg = "code", call = call)
