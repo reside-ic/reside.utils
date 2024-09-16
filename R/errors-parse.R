@@ -21,11 +21,11 @@ errors_parse <- function(path_rmd, pattern, cmd_explain, check = TRUE) {
   assert_scalar_character(cmd_explain)
   dat <- errors_read(path_rmd, pattern)
   info <- list(cmd_explain = cmd_explain)
-  errors <- Map(error_parse, names(dat), dat, info)
+  errors <- Map(error_parse, names(dat), dat, MoreArgs = list(info = info))
   if (check) {
     cli::cli_alert_info("Checking errors render")
     for (err in errors) {
-      capture.output(suppressMessages(error_render(err, TRUE)))
+      utils::capture.output(suppressMessages(error_render(err, TRUE)))
     }
     cli::cli_alert_success("...all ok")
   }

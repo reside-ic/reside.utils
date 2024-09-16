@@ -4,7 +4,7 @@
 \alias{errors_parse}
 \title{Parse errors from vignette}
 \usage{
-errors_parse(path_rmd, pattern, check = TRUE)
+errors_parse(path_rmd, pattern, cmd_explain, check = TRUE)
 }
 \arguments{
 \item{path_rmd}{Path to the .Rmd file containing the error
@@ -13,6 +13,8 @@ descriptions}
 \item{pattern}{A regular expression matching each error message,
 e.g., \verb{E[0-9]\{4\}}.  This should not include beginning or end of
 string markers.}
+
+\item{cmd_explain}{The name of the command to explain an error}
 
 \item{check}{Logical, indicating if we should check that we can
 render everything we produce}
