@@ -11,7 +11,7 @@ Description: Some common utilities that we commonly use in other
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.3.1
 URL: https://reside-ic.github.io/reside.utils, https://github.com/reside-ic/reside.utils
 BugReports: https://github.com/reside-ic/reside.utils/issues
 Imports:

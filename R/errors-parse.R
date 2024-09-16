@@ -1,4 +1,21 @@
-errors_parse <- function(path_rmd, pattern, url = NULL, check = TRUE) {
+##' Parse errors from vignette
+##'
+##' @title Parse errors from vignette
+##'
+##' @param path_rmd Path to the .Rmd file containing the error
+##'   descriptions
+##'
+##' @param pattern A regular expression matching each error message,
+##'   e.g., `E[0-9]{4}`.  This should not include beginning or end of
+##'   string markers.
+##'
+##' @param check Logical, indicating if we should check that we can
+##'   render everything we produce
+##'
+##' @return A list, save this within the package
+##'
+##' @export
+errors_parse <- function(path_rmd, pattern, check = TRUE) {
   dat <- errors_read(path_rmd, pattern)
   res <- Map(error_parse, names(dat), dat)
   if (check) {
@@ -9,7 +26,7 @@ errors_parse <- function(path_rmd, pattern, url = NULL, check = TRUE) {
     cli::cli_alert_success("...all ok")
   }
   list(
-    url = errors_url(url, path_rmd),
+    url = errors_url(path_rmd),
     pattern = list(
       local = pattern,
       complete = sprintf("^%s$", pattern),
@@ -18,10 +35,7 @@ errors_parse <- function(path_rmd, pattern, url = NULL, check = TRUE) {
 }
 
 
-errors_url <- function(url, path_rmd) {
-  if (!is.null(url)) {
-    return(url)
-  }
+errors_url <- function(path_rmd) {
   pkg <- pkgdown::as_pkgdown(dirname(dirname(path_rmd)))
   i <- match(basename(path_rmd), basename(pkg$vignettes$file_in))
   file.path(pkg$meta$url, pkg$vignettes$file_out[[i]])
