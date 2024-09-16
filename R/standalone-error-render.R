@@ -26,7 +26,7 @@ error_explain <- function(errors, code, how, call = parent.frame()) {
     url <- sprintf("%s#%s",errors$url, tolower(code))
     utils::browseURL(url)
   } else {
-    render_error(err, how == "pretty")
+    error_render(err, how == "pretty")
   }
 }
 
