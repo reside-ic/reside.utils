@@ -17,7 +17,7 @@
 ##' @export
 errors_parse <- function(path_rmd, pattern, check = TRUE) {
   dat <- errors_read(path_rmd, pattern)
-  res <- Map(error_parse, names(dat), dat)
+  errors <- Map(error_parse, names(dat), dat)
   if (check) {
     cli::cli_alert_info("Checking errors render")
     for (err in errors) {
@@ -31,7 +31,7 @@ errors_parse <- function(path_rmd, pattern, check = TRUE) {
       local = pattern,
       complete = sprintf("^%s$", pattern),
       hint = pattern_to_hint(pattern)),
-    errors = res)
+    errors = errors)
 }
 
 
@@ -56,7 +56,7 @@ pattern_to_hint <- function(pattern) {
 errors_read <- function(path_rmd, pattern) {
   txt <- readLines(path_rmd)
   re <- sprintf("^# `(%s)`$", pattern)
-  i <- grepl(re, txt)
+  i <- grep(re, txt)
 
   if (length(setdiff(grep("^# ", txt), i)) > 0) {
     cli::cli_abort(
@@ -72,7 +72,7 @@ errors_read <- function(path_rmd, pattern) {
 
 error_parse <- function(name, txt) {
   xml <- xml2::read_xml(commonmark::markdown_xml(txt))
-  list(code = code,
+  list(code = name,
        plain = txt,
        parsed = lapply(xml2::xml_children(xml), error_parse_node))
 }
