@@ -1,6 +1,6 @@
 Package: reside.utils
 Title: Common Utilities
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: c(person("Rich", "FitzJohn", role = c("aut", "cre"),
                     email = "rich.fitzjohn@gmail.com"),
              person("Imperial College of Science, Technology and Medicine",
@@ -16,9 +16,12 @@ URL: https://reside-ic.github.io/reside.utils, https://github.com/reside-ic/resi
 BugReports: https://github.com/reside-ic/reside.utils/issues
 Imports:
     cli,
-    fs
+    commonmark,
+    fs,
+    xml2
 Suggests:
     mockery,
+    pkgdown,
     pkgload,
     rmarkdown,
     usethis,
