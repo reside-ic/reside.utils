@@ -18,7 +18,7 @@ To exclude this file from coverage counts, make a `.covrignore` file containing:
 R/import-*.R
 ```
 
-To exclude these files from GitHub diffs by default
+To exclude these files from GitHub diffs by default, create (or add to) a `.gitattributes` files with the following:
 
 ```
 R/import-*.R linguist-generated=true
