@@ -34,6 +34,7 @@ install_missing <- function(packages,
     if (tolower(ans) == "y") {
       utils::install.packages(msg)
       install_missing(msg, FALSE, call)
+      return()
     }
   }
 
