@@ -1,7 +1,7 @@
 # ---
 # repo: reside/reside.utils
 # file: standalone-install.R
-# imports: [cli, rlang]
+# imports: cli
 # ---
 install_needed <- function(package, need, offer_install = NULL,
                            call = parent.frame()) {
@@ -52,7 +52,7 @@ install_missing <- function(packages,
 
 install_offer_install <- function(offer_install) {
   if (is.null(offer_install)) {
-    offer_install <- rlang::is_interactive() &&
+    offer_install <- interactive() &&
       isTRUE(as.logical(Sys.getenv("NOT_CRAN", "false")))
   }
   offer_install
