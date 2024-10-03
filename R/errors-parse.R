@@ -24,8 +24,13 @@ errors_parse <- function(path_rmd, pattern, cmd_explain, check = TRUE) {
   errors <- Map(error_parse, names(dat), dat, MoreArgs = list(info = info))
   if (check) {
     cli::cli_alert_info("Checking errors render")
-    for (err in errors) {
-      utils::capture.output(suppressMessages(error_render(err, TRUE)))
+    for (code in names(errors)) {
+      err <- errors[[code]]
+      tryCatch(
+        utils::capture.output(suppressMessages(error_render(err, TRUE))),
+        error = function(e) {
+          cli::cli_abort("Failure for {code}", parent = e)
+        })
     }
     cli::cli_alert_success("...all ok")
   }
@@ -104,7 +109,7 @@ error_parse_node <- function(x, info) {
          ## Hard, inline:
          link = error_parse_link(x, info),
          ## Easy, inline:
-         code = sprintf("{.code %s}", xml2::xml_text(x)),
+         code = sprintf("{.code %s}", error_escape_format(xml2::xml_text(x))),
          emph = sprintf("{.emph %s}", xml2::xml_text(x)),
          strong = sprintf("{.strong %s}", xml2::xml_text(x)),
          text = xml2::xml_text(x),
@@ -158,4 +163,12 @@ trim_blank <- function(x) {
     j <- j - 1L
   }
   x[i:j]
+}
+
+
+error_escape_format <- function(string) {
+  transformer <- function(text, envir) {
+    sprintf("{{%s}}", text)
+  }
+  glue::glue(string, .transformer = transformer)
 }
