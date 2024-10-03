@@ -67,9 +67,17 @@ errors_read <- function(path_rmd, pattern) {
       "Some headings in '{path_rmd}' don't match expected pattern")
   }
 
+  nms <- sub(re, "\\1", txt[i])
+  if (anyDuplicated(nms)) {
+    dups <- unique(nms[duplicated(nms)])
+    cli::cli_abort(
+      "Some headings in '{path_rmd}' are duplicated: {dups}")
+  }
+
   ret <- Map(function(from, to) trim_blank(txt[from:to]),
              i + 1, c(i[-1] - 1, length(txt)))
-  names(ret) <- sub(re, "\\1", txt[i])
+  names(ret) <- nms
+
   ret
 }
 

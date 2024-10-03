@@ -136,3 +136,20 @@ test_that("error on unknown node", {
   expect_error(error_parse_md("---", NULL),
                "Unknown node in md: 'thematic_break'")
 })
+
+
+test_that("prevent duplicated errors", {
+  tmp <- withr::local_tempfile()
+  writeLines(
+    c("# `E001`",
+      "",
+      "error1",
+      "",
+      "# `E001`",
+      "",
+      "error2"),
+    tmp)
+  expect_error(
+    errors_read(tmp, "E[0-9]{3}"),
+    "Some headings in '.+' are duplicated")
+})
