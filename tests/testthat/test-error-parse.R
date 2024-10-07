@@ -136,3 +136,40 @@ test_that("error on unknown node", {
   expect_error(error_parse_md("---", NULL),
                "Unknown node in md: 'thematic_break'")
 })
+
+
+test_that("prevent duplicated errors", {
+  tmp <- withr::local_tempfile()
+  writeLines(
+    c("# `E001`",
+      "",
+      "error1",
+      "",
+      "# `E001`",
+      "",
+      "error2"),
+    tmp)
+  expect_error(
+    errors_read(tmp, "E[0-9]{3}"),
+    "Some headings in '.+' are duplicated")
+})
+
+
+test_that("can escape format in code", {
+  list(cmd_explain = "x")
+  txt <- c("Some `code {with}` format templates",
+           "",
+           "```",
+           "a <- if (a) {b} else {c}",
+           "```")
+  res <- error_parse_md(txt)
+  expect_length(res, 2)
+  expect_equal(
+    res[[1]],
+    list(type = "paragraph",
+         text = "Some {.code code {{with}}} format templates"))
+  expect_equal(
+    res[[2]],
+    list(type = "code_block",
+         text = "a <- if (a) {b} else {c}"))
+})
