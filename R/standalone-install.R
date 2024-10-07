@@ -13,27 +13,35 @@ install_needed <- function(package, need, offer_install = NULL,
 install_needs_list <- function(package, need) {
   desc <- utils::packageDescription(package)
   key <- sprintf("Config/Needs/%s", need)
-  strsplit(desc[[key]], ",\\s+")[[1]]
+  value <- desc[[key]]
+  if (is.null(value)) character() else strsplit(value, ",\\s+")[[1]]
+}
+
+
+install_list_missing_packages <- function(packages) {
+  packages[!vapply(packages, requireNamespace, TRUE, quietly = TRUE)]
 }
 
 
 install_missing <- function(packages,
                             offer_install = NULL,
                             call = parent.frame()) {
-  err <- !vapply(packages, requireNamespace, TRUE, quietly = TRUE)
-  if (!any(err)) {
+  msg <- install_list_missing_packages(packages)
+  if (length(msg) == 0) {
     return()
   }
 
-  msg <- packages[err]
   message <- "Package{?s} missing for this functionality: {.pkg {msg}}"
 
   if (install_offer_install(offer_install)) {
     cli::cli_alert_warning(message)
     ans <- readline("Try installing these packages? [y/N] ")
     if (tolower(ans) == "y") {
-      utils::install.packages(msg)
-      install_missing(msg, FALSE, call)
+      msg <- install_packages(msg)
+      if (length(msg) > 0) {
+        cli::cli_abort(
+          "Failed to install package{?s}: {.pkg {msg}}")
+      }
       cli::cli_alert_success("Installation successful")
       return()
     }
@@ -56,4 +64,10 @@ install_offer_install <- function(offer_install) {
       isTRUE(as.logical(Sys.getenv("NOT_CRAN", "false")))
   }
   offer_install
+}
+
+
+install_packages <- function(packages) {
+  utils::install.packages(packages)
+  install_list_missing_packages(packages)
 }
