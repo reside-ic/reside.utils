@@ -116,3 +116,15 @@ test_that("can check directories do not exist", {
     assert_directory_does_not_exist(path),
     "Directory already exists")
 })
+
+
+test_that("can construct canonical paths in hidden directories", {
+  tmp <- withr::local_tempdir()
+  path <- file.path("a", ".foo", "bar")
+  path_abs <- file.path(tmp, path)
+  expect_equal(file_canonical_case(path, tmp), NA_character_)
+  fs::dir_create(dirname(path_abs))
+  file.create(path_abs)
+  expect_equal(file_canonical_case(path, tmp), path)
+  expect_equal(file_canonical_case(toupper(path), tmp), path)
+})
