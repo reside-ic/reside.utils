@@ -108,6 +108,7 @@ test_that("can convert files to canonical case", {
 
 
 test_that("can cope where multiple casings are found", {
+  skip_on_os(c("windows", "mac"))
   tmp <- withr::local_tempdir()
   p <- file.path(tmp, c("README.md", "readme.md"))
   file.create(p)
