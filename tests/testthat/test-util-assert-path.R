@@ -107,6 +107,16 @@ test_that("can convert files to canonical case", {
 })
 
 
+test_that("can cope where multiple casings are found", {
+  tmp <- withr::local_tempdir()
+  p <- file.path(tmp, c("README.md", "readme.md"))
+  file.create(p)
+  expect_equal(file_canonical_case("readme.md",  tmp), "readme.md")
+  expect_equal(file_canonical_case("README.md",  tmp), "README.md")
+  expect_equal(file_canonical_case("README.MD",  tmp), NA_character_)
+})
+
+
 test_that("can check directories do not exist", {
   tmp <- withr::local_tempdir()
   path <- file.path(tmp, "a")
