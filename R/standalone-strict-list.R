@@ -30,6 +30,12 @@ as_strict_list <- function(obj, name = NULL) {
   obj
 }
 
+#' @export
+as.list.strict_list <- function(x, ...) {
+  class(x) <- NULL
+  attr(x, "name") <- NULL
+  x
+}
 
 #' @export
 "[[.strict_list" <- function(x, i, ..., call = parent.frame()) {

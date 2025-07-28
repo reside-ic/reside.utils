@@ -3,4 +3,5 @@
 S3method("$",strict_list)
 S3method("[",strict_list)
 S3method("[[",strict_list)
+S3method(as.list,strict_list)
 export(errors_parse)

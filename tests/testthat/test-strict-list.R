@@ -21,13 +21,13 @@ test_that("Can add values to an existing strict_list", {
   expect_equal(l$y, 42)
 })
 
-test_that("Slicing a strict_list returns a strict_list", {
+test_that("Subsetting a strict_list returns a strict_list", {
   l <- strict_list(x = 34, y = 42, z = 12, .name = "foo")
-  l2 <- l[c("x", "z")]
-  expect_s3_class(l2, "strict_list")
-  expect_setequal(names(l2), c("x", "z"))
+  sub <- l[c("x", "z")]
+  expect_s3_class(sub, "strict_list")
+  expect_setequal(names(sub), c("x", "z"))
 
-  expect_error(l2$y, "'y' is not found in 'foo'")
+  expect_error(sub$y, "'y' is not found in 'foo'")
 })
 
 test_that("Can index a list by position", {
@@ -36,4 +36,13 @@ test_that("Can index a list by position", {
   expect_equal(l[[1]], 34)
   expect_equal(l[1], strict_list(x = 34, .name = "foo"))
   expect_equal(l[c(2, 1)], strict_list(y = 42, x = 34, .name = "foo"))
+})
+
+test_that("Can unwrap a strict list", {
+  l <- strict_list(x = 34)
+  expect_error(l$y, "'y' is not found in 'list'")
+
+  regular <- as.list(l)
+  expect_equal(regular, list(x = 34))
+  expect_equal(regular$y, NULL)
 })
